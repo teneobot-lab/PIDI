@@ -18,9 +18,9 @@ function Page.select(p)
     for q, tb in pairs(tabButtons) do
         local on = (q == p)
         tb.on = on
-        tween(tb.btn, { BackgroundTransparency = on and 0.05 or 1, BackgroundColor3 = T.steel })
+        tween(tb.btn, { BackgroundTransparency = on and 0 or 1, BackgroundColor3 = on and T.steel or T.side })
         tb.ind.Visible = on
-        tb.lbl.TextColor3 = on and T.text or T.muted
+        tb.lbl.TextColor3 = on and (T.topText or T.text) or T.muted
     end
 end
 
@@ -39,7 +39,8 @@ function Page.new(name)
         Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = T.steel, BackgroundTransparency = 1,
         AutoButtonColor = false, Text = "", LayoutOrder = #Page.list,
     }, Window.sidebar)
-    corner(b, 8)
+    corner(b, 4)
+    new("UIStroke", { Color = T.outline or T.stroke, Thickness = 1, Transparency = 0.45, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }, b)
     local ind = new("Frame", { Size = UDim2.fromOffset(3, 14), Position = UDim2.new(0, 0, 0.5, -7), BackgroundColor3 = Cfg.Accent, BorderSizePixel = 0, Visible = false }, b)
     corner(ind, 2)
     onAccent(function() ind.BackgroundColor3 = Cfg.Accent end)
@@ -71,7 +72,8 @@ function Page:card(h)
     local f = new("Frame", {
         Size = UDim2.new(1, 0, 0, h), BackgroundColor3 = self:base(), BorderSizePixel = 0, LayoutOrder = self:next(),
     }, self.sf)
-    corner(f, 8)
+    corner(f, 4)
+    new("UIStroke", { Color = T.outline or T.stroke, Thickness = 1, Transparency = 0.15, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }, f)
     return f
 end
 
