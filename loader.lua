@@ -1,37 +1,37 @@
--- PIDI Loader
--- Entry point: https://github.com/teneobot-lab/PIDI
--- Keep this file small; project logic belongs in src/main.lua.
+-- PIDI Loader for the modular TOFHub package
+-- 1) Download and extract TOFHub.zip from this repository into the executor workspace.
+-- 2) Keep the extracted folder named "TOFHub".
+-- 3) Run this loader.
+--
+-- The original TOFHub package expects readfile/loadstring support.
+-- This launcher deliberately uses the original module loader so all dependencies
+-- are resolved by TOFHub/main.lua in its declared BOOT order.
 
-local SOURCE_URL = "https://raw.githubusercontent.com/teneobot-lab/PIDI/main/src/main.lua"
+local MAIN_PATH = "TOFHub/main.lua"
 
-local function report(message)
-    warn("[PIDI] " .. tostring(message))
+if type(readfile) ~= "function" then
+    warn("[PIDI] This executor does not provide readfile(). Extract the TOFHub folder and run TOFHub/main.lua directly.")
+    return
+end
+
+local okRead, source = pcall(readfile, MAIN_PATH)
+if not okRead or type(source) ~= "string" or source == "" then
+    warn("[PIDI] Missing " .. MAIN_PATH .. ". Download and extract TOFHub.zip first.")
+    return
 end
 
 if type(loadstring) ~= "function" then
-    report("loadstring is unavailable in this environment.")
+    warn("[PIDI] loadstring() is unavailable in this environment.")
     return
 end
 
-local requestOk, source = pcall(function()
-    return game:HttpGet(SOURCE_URL)
-end)
-
-if not requestOk or type(source) ~= "string" or source == "" then
-    report("Could not download src/main.lua.")
+local okCompile, chunk = pcall(loadstring, source, "@PIDI/TOFHub/main.lua")
+if not okCompile or type(chunk) ~= "function" then
+    warn("[PIDI] Could not compile main.lua: " .. tostring(chunk))
     return
 end
 
-local compileOk, chunk = pcall(loadstring, source)
-if not compileOk or type(chunk) ~= "function" then
-    report("Failed to compile the downloaded entry point: " .. tostring(chunk))
-    return
+local okRun, err = pcall(chunk)
+if not okRun then
+    warn("[PIDI] TOFHub startup failed: " .. tostring(err))
 end
-
-local runOk, runError = pcall(chunk)
-if not runOk then
-    report("Entry point stopped with an error: " .. tostring(runError))
-    return
-end
-
-print("[PIDI] Loader finished.")
