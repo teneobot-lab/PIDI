@@ -7,9 +7,14 @@ local Cfg = Config.Cfg
 
 local Kit = {}
 
--- Token warna bersama; Theme.apply mengubah tabel ini in-place agar modul UI ikut berubah.
-local Theme = Hub.use("ui/Theme")
-Kit.T = Theme.T
+-- tema (black steel blue)
+Kit.T = {
+    bg = Color3.fromRGB(12, 13, 18), surface = Color3.fromRGB(20, 22, 29),
+    raised = Color3.fromRGB(28, 31, 41), steel = Color3.fromRGB(35, 50, 74),
+    steelEdge = Color3.fromRGB(92, 130, 186), track = Color3.fromRGB(48, 54, 72),
+    stroke = Color3.fromRGB(42, 47, 62), text = Color3.fromRGB(236, 239, 247),
+    muted = Color3.fromRGB(136, 143, 162), danger = Color3.fromRGB(240, 80, 90),
+}
 local T = Kit.T
 
 function Kit.new(class, props, parent)
