@@ -32,7 +32,7 @@ local Cfg = {
     VDAutoSkillCheck = false, VDSkillMode = "Perfect",
     VDSpeedBoost = false, VDSpeedMultiplier = 0.30, VDSpeedSafeMode = true,
     -- GUI
-    Accent = Color3.fromRGB(124, 106, 255), ShowFloat = true, W = 420, H = 320,
+    Accent = Color3.fromRGB(124, 106, 255), Theme = "Overworld", ShowFloat = true, W = 420, H = 320,
 }
 -- kunci per kategori ESP (dibangkitkan dari config/Categories)
 for _, c in ipairs(Cats.list) do
