@@ -33,22 +33,22 @@ local panel = new("Frame", {
     Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = T.bg, BorderSizePixel = 0,
     ClipsDescendants = true, ZIndex = 1,
 }, win)
-corner(panel, 12)
-new("UIStroke", { Color = T.stroke, Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }, panel)
+corner(panel, 5)
+new("UIStroke", { Color = T.outline or T.stroke, Thickness = 3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }, panel)
 
 --------------------------------------------------------
 -- Title bar
 --------------------------------------------------------
-local titleBar = new("Frame", { Size = UDim2.new(1, 0, 0, TITLE_H), BackgroundTransparency = 1 }, panel)
+local titleBar = new("Frame", { Size = UDim2.new(1, 0, 0, TITLE_H), BackgroundColor3 = T.top, BackgroundTransparency = 0, BorderSizePixel = 0 }, panel)
 local logo = new("Frame", { Position = UDim2.fromOffset(10, 8), Size = UDim2.fromOffset(20, 20), BackgroundColor3 = Cfg.Accent, BorderSizePixel = 0 }, titleBar)
 corner(logo, 6)
 local logoT = lbl(logo, "T", 12, T.bg, Enum.Font.GothamBold, Enum.TextXAlignment.Center)
 logoT.Size = UDim2.new(1, 0, 1, 0)
 onAccent(function() logo.BackgroundColor3 = Cfg.Accent end)
 
-local title = lbl(titleBar, "TOF HUB", 12, T.text, Enum.Font.GothamBold)
+local title = lbl(titleBar, "TOF HUB", 12, T.topText or T.text, Enum.Font.GothamBold)
 title.Position, title.Size = UDim2.fromOffset(38, 0), UDim2.fromOffset(64, TITLE_H)
-local ver = lbl(titleBar, "v4", 10, T.muted, Enum.Font.GothamBold)
+local ver = lbl(titleBar, "v4", 10, T.topText or T.muted, Enum.Font.GothamBold)
 ver.Position, ver.Size = UDim2.fromOffset(92, 1), UDim2.fromOffset(30, TITLE_H)
 
 local statLbl = lbl(titleBar, "", 10, T.muted, Enum.Font.Code, Enum.TextXAlignment.Right)
@@ -80,13 +80,32 @@ onAccent(function() accentGrad.Color = ColorSequence.new(Cfg.Accent, T.stroke) e
 -- Body: sidebar + konten
 --------------------------------------------------------
 local body = new("Frame", { Position = UDim2.fromOffset(0, TITLE_H + 1), Size = UDim2.new(1, 0, 1, -(TITLE_H + 1)), BackgroundTransparency = 1 }, panel)
+local sideRail = new("Frame", { Position = UDim2.fromOffset(0, 0), Size = UDim2.new(0, 104, 1, 0), BackgroundColor3 = T.side or T.surface, BorderSizePixel = 0 }, body)
+new("UIStroke", { Color = T.outline or T.stroke, Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }, sideRail)
 
 local sidebar = new("ScrollingFrame", {
-    Position = UDim2.fromOffset(8, 8), Size = UDim2.new(0, 88, 1, -16),
+    Position = UDim2.fromOffset(8, 42), Size = UDim2.new(0, 88, 1, -50),
     BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 0,
     CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
 }, body)
 new("UIListLayout", { Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }, sidebar)
+local search = new("TextBox", {
+    Position = UDim2.fromOffset(8, 8), Size = UDim2.fromOffset(88, 26),
+    BackgroundColor3 = T.raised, BorderSizePixel = 0, ClearTextOnFocus = false,
+    PlaceholderText = "Cari tab...", PlaceholderColor3 = T.muted,
+    Text = "", TextColor3 = T.text, TextSize = 10, Font = Enum.Font.Gotham,
+}, body)
+corner(search, 4)
+new("UIStroke", { Color = T.outline or T.stroke, Thickness = 1 }, search)
+search:GetPropertyChangedSignal("Text"):Connect(function()
+    local q = string.lower(search.Text)
+    for _, child in ipairs(sidebar:GetChildren()) do
+        if child:IsA("TextButton") then
+            local label = child:FindFirstChildOfClass("TextLabel")
+            child.Visible = (q == "") or (label and string.find(string.lower(label.Text), q, 1, true) ~= nil)
+        end
+    end
+end)
 
 local content = new("Frame", {
     Position = UDim2.fromOffset(104, 8), Size = UDim2.new(1, -112, 1, -16), BackgroundTransparency = 1,
@@ -151,7 +170,7 @@ local toastTok = 0
 -- API publik
 --------------------------------------------------------
 local Window = {
-    win = win, panel = panel, sidebar = sidebar, content = content,
+    win = win, panel = panel, sidebar = sidebar, content = content, search = search,
     statLbl = statLbl, closeBtn = closeBtn,
 }
 
