@@ -10,6 +10,8 @@ local Root = Hub.use("ui/Root")
 local T, new, corner, lbl = Kit.T, Kit.new, Kit.corner, Kit.lbl
 local tween, isPress, onAccent, Drag = Kit.tween, Kit.isPress, Kit.onAccent, Kit.Drag
 
+local Theme = Hub.use("ui/Theme")
+
 local TITLE_H = 36
 local MINW, MINH = 320, 220
 local function clampSize(w, h)
@@ -33,22 +35,22 @@ local panel = new("Frame", {
     Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = T.bg, BorderSizePixel = 0,
     ClipsDescendants = true, ZIndex = 1,
 }, win)
-corner(panel, 12)
-new("UIStroke", { Color = T.stroke, Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }, panel)
+corner(panel, 3)
+new("UIStroke", { Color = T.outline, Thickness = 3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }, panel)
 
 --------------------------------------------------------
 -- Title bar
 --------------------------------------------------------
-local titleBar = new("Frame", { Size = UDim2.new(1, 0, 0, TITLE_H), BackgroundTransparency = 1 }, panel)
+local titleBar = new("Frame", { Size = UDim2.new(1, 0, 0, TITLE_H), BackgroundColor3 = T.top, BorderSizePixel = 0 }, panel)
 local logo = new("Frame", { Position = UDim2.fromOffset(10, 8), Size = UDim2.fromOffset(20, 20), BackgroundColor3 = Cfg.Accent, BorderSizePixel = 0 }, titleBar)
-corner(logo, 6)
-local logoT = lbl(logo, "T", 12, T.bg, Enum.Font.GothamBold, Enum.TextXAlignment.Center)
+corner(logo, 2)
+local logoT = lbl(logo, "M", 12, T.topText, Enum.Font.GothamBold, Enum.TextXAlignment.Center)
 logoT.Size = UDim2.new(1, 0, 1, 0)
 onAccent(function() logo.BackgroundColor3 = Cfg.Accent end)
 
-local title = lbl(titleBar, "TOF HUB", 12, T.text, Enum.Font.GothamBold)
+local title = lbl(titleBar, "PIDI MARIO", 12, T.topText, Enum.Font.GothamBold)
 title.Position, title.Size = UDim2.fromOffset(38, 0), UDim2.fromOffset(64, TITLE_H)
-local ver = lbl(titleBar, "v4", 10, T.muted, Enum.Font.GothamBold)
+local ver = lbl(titleBar, "UI", 10, T.topText, Enum.Font.GothamBold)
 ver.Position, ver.Size = UDim2.fromOffset(92, 1), UDim2.fromOffset(30, TITLE_H)
 
 local statLbl = lbl(titleBar, "", 10, T.muted, Enum.Font.Code, Enum.TextXAlignment.Right)
@@ -82,14 +84,16 @@ onAccent(function() accentGrad.Color = ColorSequence.new(Cfg.Accent, T.stroke) e
 local body = new("Frame", { Position = UDim2.fromOffset(0, TITLE_H + 1), Size = UDim2.new(1, 0, 1, -(TITLE_H + 1)), BackgroundTransparency = 1 }, panel)
 
 local sidebar = new("ScrollingFrame", {
-    Position = UDim2.fromOffset(8, 8), Size = UDim2.new(0, 88, 1, -16),
-    BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 0,
+    Position = UDim2.fromOffset(7, 7), Size = UDim2.new(0, 92, 1, -14),
+    BackgroundColor3 = T.side, BorderSizePixel = 0, ScrollBarThickness = 0,
     CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
 }, body)
+corner(sidebar, 2)
+new("UIStroke", { Color = T.outline, Thickness = 2 }, sidebar)
 new("UIListLayout", { Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }, sidebar)
 
 local content = new("Frame", {
-    Position = UDim2.fromOffset(104, 8), Size = UDim2.new(1, -112, 1, -16), BackgroundTransparency = 1,
+    Position = UDim2.fromOffset(108, 7), Size = UDim2.new(1, -115, 1, -14), BackgroundTransparency = 1,
 }, body)
 
 local grip = new("TextButton", {
