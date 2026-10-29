@@ -39,7 +39,7 @@ function Page.new(name)
         Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = T.steel, BackgroundTransparency = 1,
         AutoButtonColor = false, Text = "", LayoutOrder = #Page.list,
     }, Window.sidebar)
-    corner(b, 8)
+    corner(b, 2)
     local ind = new("Frame", { Size = UDim2.fromOffset(3, 14), Position = UDim2.new(0, 0, 0.5, -7), BackgroundColor3 = Cfg.Accent, BorderSizePixel = 0, Visible = false }, b)
     corner(ind, 2)
     onAccent(function() ind.BackgroundColor3 = Cfg.Accent end)
@@ -71,7 +71,8 @@ function Page:card(h)
     local f = new("Frame", {
         Size = UDim2.new(1, 0, 0, h), BackgroundColor3 = self:base(), BorderSizePixel = 0, LayoutOrder = self:next(),
     }, self.sf)
-    corner(f, 8)
+    corner(f, 3)
+    new("UIStroke", { Color = T.outline, Thickness = 1 }, f)
     return f
 end
 
@@ -99,7 +100,8 @@ function Page:Info(txt, rich)
         Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundColor3 = self:base(), BorderSizePixel = 0, LayoutOrder = self:next(),
     }, self.sf)
-    corner(f, 8)
+    corner(f, 3)
+    new("UIStroke", { Color = T.outline, Thickness = 1 }, f)
     new("UIPadding", { PaddingTop = UDim.new(0, 9), PaddingBottom = UDim.new(0, 9), PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12) }, f)
     local l = lbl(f, txt, 11, T.text)
     l.Size, l.AutomaticSize = UDim2.new(1, 0, 0, 0), Enum.AutomaticSize.Y
