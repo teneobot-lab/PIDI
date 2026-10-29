@@ -3,11 +3,18 @@ local Hub = ...
 local Config = Hub.use("config/Config")
 local Window = Hub.use("ui/Window")
 local Page = Hub.use("ui/Controls")
+local Theme = Hub.use("ui/Theme")
+local Root = Hub.use("ui/Root")
 
 local page = Page.new("Settings")
 
 page:Header("Settings", "Tampilan dan deteksi")
 page:Section("Tampilan")
+page:Choice("Tema UI", "Theme", Theme.names)
+page:Button("Terapkan tema", function()
+    Theme.set(Config.Cfg.Theme, Root.gui)
+    Window.toast("Tema: " .. Config.Cfg.Theme)
+end)
 page:Color("Warna aksen UI", "Accent")
 page:Toggle("Tombol melayang", "ShowFloat")
 page:Button("Reset ukuran window", function()
