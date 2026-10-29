@@ -50,7 +50,10 @@ end
 --------------------------------------------------------
 local function readSource(name)
     local path = name .. ".lua"
-    if BASE_URL then return game:HttpGet(BASE_URL .. path) end
+    if BASE_URL then
+        local stamp = tostring(os.time()) .. tostring(math.floor(os.clock() * 1000))
+        return game:HttpGet(BASE_URL .. path .. "?v=" .. stamp)
+    end
     return readfile(ROOT .. "/" .. path)
 end
 

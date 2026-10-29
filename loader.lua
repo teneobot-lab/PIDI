@@ -16,7 +16,8 @@ end
 local function fetch(url)
     -- cache-buster supaya tidak dapat versi lama dari CDN raw.githubusercontent
     local sep = url:find("?", 1, true) and "&" or "?"
-    return game:HttpGet(url .. sep .. "t=" .. os.time())
+    local stamp = tostring(os.time()) .. tostring(math.floor(os.clock() * 1000))
+    return game:HttpGet(url .. sep .. "t=" .. stamp)
 end
 
 local okGet, src = pcall(fetch, BASE .. "main.lua")
